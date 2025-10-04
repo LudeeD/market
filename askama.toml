@@ -1,0 +1,9 @@
+[general]
+dirs = ["templates"]
+
+[[escaping]]
+path = "*.html"
+escaper = "html"
+
+[filters]
+round = "market::web::filters::round"
