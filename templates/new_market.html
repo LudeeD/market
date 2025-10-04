@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Create Market - Prediction Market{% endblock %}
+
+{% block content %}
+<h1>create market</h1>
+
+{% if let Some(err) = error %}
+<div class="error">error: {{ err }}</div>
+{% endif %}
+
+<form method="post" action="/markets/new">
+    <div class="form-group">
+        <label for="question">question (yes/no format):</label>
+        <input type="text" id="question" name="question" required
+               placeholder="Will Bitcoin reach $100k in 2025?">
+    </div>
+
+    <div class="form-group">
+        <label for="description">description (optional):</label>
+        <textarea id="description" name="description" rows="4"
+                  placeholder="Additional context or resolution criteria..."></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="days_until_end">days until market closes:</label>
+        <input type="number" id="days_until_end" name="days_until_end"
+               min="1" required value="30">
+    </div>
+
+    <div class="form-group">
+        <label for="oracle_username">oracle username (optional):</label>
+        <input type="text" id="oracle_username" name="oracle_username"
+               placeholder="Leave empty to be your own oracle">
+        <small style="color: #888;">The oracle is the user who can resolve the market. If empty, you'll be the oracle.</small>
+    </div>
+
+    <button type="submit">create market</button>
+</form>
+
+<p><a href="/markets">← back to markets</a></p>
+{% endblock %}

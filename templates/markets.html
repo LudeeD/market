@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Markets - Prediction Market{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>markets ({{ markets.len() }})</h1>
+    <a href="/markets/new">create new market</a>
+</div>
+
+{% if markets.is_empty() %}
+<p>no markets yet. be the first to create one!</p>
+{% else %}
+<div class="markets-grid">
+    {% for market in markets %}
+    <div class="market-card-compact">
+        <h3><a href="/markets/{{ market.id }}">{{ market.question }}</a></h3>
+
+        {% if market.resolved %}
+        <div class="market-status resolved">
+            resolved: {% if let Some(outcome) = market.outcome %}{% if outcome %}YES{% else %}NO{% endif %}{% endif %}
+        </div>
+        {% else %}
+        <div class="market-status active">
+            ends: {{ market.end_date }}
+        </div>
+        {% endif %}
+
+        <div class="market-probability">
+            <div class="prob-bar">
+                <div class="prob-yes" style="width: {{ market.yes_probability }}%">
+                    {{ market.yes_probability|round }}%
+                </div>
+                <div class="prob-no" style="width: {{ market.no_probability }}%">
+                    {{ market.no_probability|round }}%
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,293 @@
+{% extends "base.html" %}
+
+{% block title %}{{ market.question }} - Prediction Market{% endblock %}
+
+{% block content %}
+<div class="market-header">
+    <div>
+        <h1>{{ market.question }}</h1>
+        {% if !market.resolved %}
+        <p class="market-end-date">ends: {{ market.end_date }}</p>
+        {% endif %}
+    </div>
+    {% if market.resolved %}
+    <div class="market-status resolved">
+        <strong>resolved: {% if let Some(outcome) = market.outcome %}{% if outcome %}YES{% else %}NO{% endif %}{% endif %}</strong>
+    </div>
+    {% endif %}
+</div>
+
+{% if let Some(desc) = market.description %}
+<p class="description">{{ desc }}</p>
+{% endif %}
+
+{% if !market.resolved %}
+<div class="market-probabilities-inline">
+    <div class="prob-badge prob-yes-badge">
+        <span class="prob-label">YES</span>
+        <span class="prob-value">{{ market.yes_probability|round }}%</span>
+    </div>
+    <div class="prob-badge prob-no-badge">
+        <span class="prob-label">NO</span>
+        <span class="prob-value">{{ market.no_probability|round }}%</span>
+    </div>
+</div>
+
+<div class="price-chart-container">
+    <h3>price history</h3>
+    <canvas id="priceChart" width="800" height="300"></canvas>
+</div>
+{% endif %}
+
+<h3>trade</h3>
+
+{% if !user_positions.is_empty() %}
+<div class="current-positions">
+    <h4>your positions:</h4>
+    {% for pos in user_positions %}
+    <div class="position-badge-small">
+        <strong>{{ pos.side|upper }}</strong>: {{ pos.shares|round }} shares @ ${{ pos.avg_price|round }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="trade-forms-grid">
+    <form method="post" action="/trade/{{ market.id }}/buy" class="trade-form-compact">
+        <h4>buy</h4>
+        <div class="form-row">
+            <div class="form-group-inline">
+                <label for="shares">shares:</label>
+                <input type="number" id="shares" name="shares" min="0.01" step="0.01" required>
+            </div>
+            <div class="form-group-inline">
+                <label for="side">side:</label>
+                <select id="side" name="side" required>
+                    <option value="yes">YES</option>
+                    <option value="no">NO</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="cost-preview" class="cost-preview-compact" style="display: none;">
+            <div class="cost-row">
+                <span>cost: <strong id="cost-amount">$0.00</strong></span>
+                <span>avg: <strong id="avg-price">$0.00</strong></span>
+            </div>
+            <div class="cost-row profit-row">
+                <span>if win: <strong id="potential-payout">$0.00</strong></span>
+                <span class="profit-highlight">profit: <strong id="potential-profit">$0.00</strong></span>
+            </div>
+        </div>
+
+        <button type="submit">buy shares</button>
+    </form>
+
+    <form method="post" action="/trade/{{ market.id }}/sell" class="trade-form-compact">
+        <h4>sell</h4>
+        <div class="form-row">
+            <div class="form-group-inline">
+                <label for="sell_shares">shares:</label>
+                <input type="number" id="sell_shares" name="shares" min="0.01" step="0.01" required>
+            </div>
+            <div class="form-group-inline">
+                <label for="sell_side">side:</label>
+                <select id="sell_side" name="side" required>
+                    <option value="yes">YES</option>
+                    <option value="no">NO</option>
+                </select>
+            </div>
+        </div>
+        <button type="submit">sell shares</button>
+    </form>
+</div>
+
+{% if can_resolve %}
+<div class="resolve-section">
+    <h3>resolve market</h3>
+    <form method="post" action="/markets/{{ market.id }}/resolve">
+        <div class="form-group">
+            <label for="outcome">outcome:</label>
+            <select id="outcome" name="outcome" required>
+                <option value="yes">YES</option>
+                <option value="no">NO</option>
+            </select>
+        </div>
+        <button type="submit">resolve</button>
+    </form>
+</div>
+{% endif %}
+
+<div class="market-meta">
+    <p>total liquidity: ${{ market.total_liquidity|round }}</p>
+</div>
+
+<p><a href="/markets">← back to markets</a></p>
+
+{% if !market.resolved %}
+<script>
+// Real-time cost calculation
+const sharesInput = document.getElementById('shares');
+const sideSelect = document.getElementById('side');
+const costPreview = document.getElementById('cost-preview');
+const costAmount = document.getElementById('cost-amount');
+const avgPrice = document.getElementById('avg-price');
+const potentialPayout = document.getElementById('potential-payout');
+const potentialProfit = document.getElementById('potential-profit');
+
+let debounceTimer;
+
+async function updateCostPreview() {
+    const shares = parseFloat(sharesInput.value);
+    const side = sideSelect.value;
+
+    if (!shares || shares <= 0) {
+        costPreview.style.display = 'none';
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/markets/{{ market.id }}/calculate-cost?shares=${shares}&side=${side}`);
+        const data = await response.json();
+
+        costAmount.textContent = `$${data.cost.toFixed(2)}`;
+        avgPrice.textContent = `$${data.avg_price.toFixed(4)}`;
+        potentialPayout.textContent = `$${data.potential_payout.toFixed(2)}`;
+        potentialProfit.textContent = `$${data.potential_profit.toFixed(2)}`;
+
+        // Color code profit
+        if (data.potential_profit > 0) {
+            potentialProfit.style.color = '#00ff00';
+        } else {
+            potentialProfit.style.color = '#ff6666';
+        }
+
+        costPreview.style.display = 'block';
+    } catch (error) {
+        console.error('Error calculating cost:', error);
+        costPreview.style.display = 'none';
+    }
+}
+
+function debouncedUpdate() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(updateCostPreview, 300);
+}
+
+sharesInput.addEventListener('input', debouncedUpdate);
+sideSelect.addEventListener('change', updateCostPreview);
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+(async function() {
+    try {
+        const response = await fetch('/api/markets/{{ market.id }}/price-history');
+        const data = await response.json();
+
+        if (!data.data || data.data.length === 0) {
+            document.getElementById('priceChart').style.display = 'none';
+            return;
+        }
+
+        // Get CSS variables for theming
+        const styles = getComputedStyle(document.body);
+        const fgColor = styles.getPropertyValue('--fg').trim();
+        const borderColor = styles.getPropertyValue('--border').trim();
+        const successColor = styles.getPropertyValue('--success').trim();
+        const errorColor = styles.getPropertyValue('--error').trim();
+        const bgColor = styles.getPropertyValue('--bg').trim();
+
+        const ctx = document.getElementById('priceChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.data.map(p => new Date(p.timestamp).toLocaleString()),
+                datasets: [
+                    {
+                        label: 'YES',
+                        data: data.data.map(p => (p.yes_probability * 100).toFixed(2)),
+                        borderColor: successColor,
+                        backgroundColor: successColor + '20',
+                        borderWidth: 2,
+                        pointRadius: 3,
+                        pointHoverRadius: 5,
+                        tension: 0.1
+                    },
+                    {
+                        label: 'NO',
+                        data: data.data.map(p => (p.no_probability * 100).toFixed(2)),
+                        borderColor: errorColor,
+                        backgroundColor: errorColor + '20',
+                        borderWidth: 2,
+                        pointRadius: 3,
+                        pointHoverRadius: 5,
+                        tension: 0.1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: fgColor,
+                            font: {
+                                family: "'Courier New', monospace"
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: bgColor,
+                        borderColor: borderColor,
+                        borderWidth: 1,
+                        titleColor: fgColor,
+                        bodyColor: fgColor,
+                        titleFont: {
+                            family: "'Courier New', monospace"
+                        },
+                        bodyFont: {
+                            family: "'Courier New', monospace"
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: fgColor,
+                            font: {
+                                family: "'Courier New', monospace"
+                            }
+                        },
+                        grid: {
+                            color: borderColor
+                        }
+                    },
+                    y: {
+                        min: 0,
+                        max: 100,
+                        ticks: {
+                            color: fgColor,
+                            font: {
+                                family: "'Courier New', monospace"
+                            },
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        },
+                        grid: {
+                            color: borderColor
+                        }
+                    }
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error loading price history:', error);
+        document.querySelector('.price-chart-container').style.display = 'none';
+    }
+})();
+</script>
+{% endif %}
+{% endblock %}
