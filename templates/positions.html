@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Positions - Prediction Market{% endblock %}
+
+{% block content %}
+<h1>your positions</h1>
+
+<div class="balance">
+    <p>balance: ${{ balance|round }}</p>
+</div>
+
+{% if positions.is_empty() %}
+<p>no positions yet. <a href="/markets">browse markets</a> to start trading!</p>
+{% else %}
+<div class="positions-list">
+    {% for pos in positions %}
+    <div class="position-card">
+        <h3><a href="/markets/{{ pos.market_id }}">{{ pos.market_question }}</a></h3>
+
+        <div class="position-details">
+            <div class="position-row">
+                <span class="label">side:</span>
+                <span class="value">{{ pos.side|upper }}</span>
+            </div>
+            <div class="position-row">
+                <span class="label">shares:</span>
+                <span class="value">{{ pos.shares|round }}</span>
+            </div>
+            <div class="position-row">
+                <span class="label">total cost:</span>
+                <span class="value">${{ pos.total_cost|round }}</span>
+            </div>
+            <div class="position-row">
+                <span class="label">avg price/share:</span>
+                <span class="value">${{ pos.avg_price|round }}</span>
+            </div>
+
+            {% if pos.market_resolved %}
+                {% if pos.won %}
+                    <div class="position-outcome won">
+                        <h4>✓ WON</h4>
+                        <div class="position-row">
+                            <span class="label">payout received:</span>
+                            <span class="value profit">${{ pos.payout_if_win|round }}</span>
+                        </div>
+                        <div class="position-row">
+                            <span class="label">profit:</span>
+                            <span class="value profit">+${{ pos.profit_if_win|round }}</span>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="position-outcome lost">
+                        <h4>✗ LOST</h4>
+                        <div class="position-row">
+                            <span class="label">loss:</span>
+                            <span class="value loss">-${{ pos.loss_if_lose|round }}</span>
+                        </div>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="position-forecast">
+                    <h4>if {{ pos.side|upper }} wins:</h4>
+                    <div class="position-row">
+                        <span class="label">payout:</span>
+                        <span class="value">${{ pos.payout_if_win|round }}</span>
+                    </div>
+                    <div class="position-row">
+                        <span class="label">profit:</span>
+                        <span class="value profit">+${{ pos.profit_if_win|round }}</span>
+                    </div>
+
+                    <h4>if {{ pos.side|upper }} loses:</h4>
+                    <div class="position-row">
+                        <span class="label">loss:</span>
+                        <span class="value loss">-${{ pos.loss_if_lose|round }}</span>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<p><a href="/markets">← back to markets</a></p>
+{% endblock %}
