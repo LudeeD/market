@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up - Prediction Market{% endblock %}
+
+{% block content %}
+<h1>sign up</h1>
+
+{% if let Some(err) = error %}
+<div class="error">error: {{ err }}</div>
+{% endif %}
+
+<form method="post" action="/signup">
+    <div class="form-group">
+        <label for="username">username (min 3 chars):</label>
+        <input type="text" id="username" name="username" required minlength="3">
+    </div>
+
+    <div class="form-group">
+        <label for="password">password (min 6 chars):</label>
+        <input type="password" id="password" name="password" required minlength="6">
+    </div>
+
+    <button type="submit">create account</button>
+</form>
+
+<p>already have an account? <a href="/login">login</a></p>
+{% endblock %}

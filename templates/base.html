@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Prediction Market{% endblock %}</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/">home</a> |
+            <a href="/markets">markets</a>
+            {% if username.is_some() %}
+            |
+            <div class="profile-dropdown">
+                <button class="profile-button" id="profile-toggle">
+                    {{ username.as_ref().unwrap() }} ▾
+                </button>
+                <div class="profile-menu" id="profile-menu">
+                    <a href="/positions">positions</a>
+                    <form action="/logout" method="post">
+                        <button type="submit" class="logout-button">logout</button>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+            | <a href="/signup">signup</a> |
+            <a href="/login">login</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>prediction market | simple & extensible</p>
+        <div class="footer-theme-selector">
+            <label for="theme-switcher">theme:</label>
+            <select id="theme-switcher">
+                <option value="light">light</option>
+                <option value="dark">dark</option>
+                <option value="hacker">hacker</option>
+                <option value="sepia">sepia</option>
+                <option value="pastel">pastel</option>
+            </select>
+        </div>
+    </footer>
+
+    <script>
+        // Theme switcher
+        const themeSwitcher = document.getElementById('theme-switcher');
+        if (themeSwitcher) {
+            const body = document.body;
+
+            // Load saved theme or default to light
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            body.className = 'theme-' + savedTheme;
+            themeSwitcher.value = savedTheme;
+
+            // Listen for theme changes
+            themeSwitcher.addEventListener('change', function() {
+                const theme = this.value;
+                body.className = 'theme-' + theme;
+                localStorage.setItem('theme', theme);
+            });
+        }
+
+        // Profile dropdown toggle
+        const profileToggle = document.getElementById('profile-toggle');
+        const profileMenu = document.getElementById('profile-menu');
+
+        if (profileToggle && profileMenu) {
+            profileToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                profileMenu.classList.toggle('show');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!profileMenu.contains(e.target) && e.target !== profileToggle) {
+                    profileMenu.classList.remove('show');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
