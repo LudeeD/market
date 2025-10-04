@@ -1,0 +1,62 @@
+{
+  "db_name": "SQLite",
+  "query": "\n            SELECT id, user_id, market_id, side, shares, avg_price, created_at, updated_at\n            FROM positions\n            WHERE market_id = ? AND shares > 0\n            ",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Int64"
+      },
+      {
+        "name": "user_id",
+        "ordinal": 1,
+        "type_info": "Int64"
+      },
+      {
+        "name": "market_id",
+        "ordinal": 2,
+        "type_info": "Int64"
+      },
+      {
+        "name": "side",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "shares",
+        "ordinal": 4,
+        "type_info": "Float"
+      },
+      {
+        "name": "avg_price",
+        "ordinal": 5,
+        "type_info": "Float"
+      },
+      {
+        "name": "created_at",
+        "ordinal": 6,
+        "type_info": "Text"
+      },
+      {
+        "name": "updated_at",
+        "ordinal": 7,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "aac5fe632f44e2753b86e352df46c642e863f073744b55ded7d22063545ca82c"
+}

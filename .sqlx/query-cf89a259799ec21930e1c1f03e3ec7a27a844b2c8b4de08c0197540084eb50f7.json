@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "\n            UPDATE markets\n            SET resolved = 1, outcome = ?\n            WHERE id = ? AND resolved = 0\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "cf89a259799ec21930e1c1f03e3ec7a27a844b2c8b4de08c0197540084eb50f7"
+}

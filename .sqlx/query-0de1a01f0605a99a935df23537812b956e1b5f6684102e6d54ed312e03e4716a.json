@@ -1,0 +1,92 @@
+{
+  "db_name": "SQLite",
+  "query": "\n            INSERT INTO markets (question, description, creator_id, end_date, yes_pool, no_pool, q_yes, q_no, liquidity_param)\n            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)\n            RETURNING id, question, description, creator_id, end_date, resolved, outcome, yes_pool, no_pool, q_yes, q_no, liquidity_param, created_at\n            ",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Int64"
+      },
+      {
+        "name": "question",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "description",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "creator_id",
+        "ordinal": 3,
+        "type_info": "Int64"
+      },
+      {
+        "name": "end_date",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "resolved",
+        "ordinal": 5,
+        "type_info": "Bool"
+      },
+      {
+        "name": "outcome",
+        "ordinal": 6,
+        "type_info": "Bool"
+      },
+      {
+        "name": "yes_pool",
+        "ordinal": 7,
+        "type_info": "Float"
+      },
+      {
+        "name": "no_pool",
+        "ordinal": 8,
+        "type_info": "Float"
+      },
+      {
+        "name": "q_yes",
+        "ordinal": 9,
+        "type_info": "Float"
+      },
+      {
+        "name": "q_no",
+        "ordinal": 10,
+        "type_info": "Float"
+      },
+      {
+        "name": "liquidity_param",
+        "ordinal": 11,
+        "type_info": "Float"
+      },
+      {
+        "name": "created_at",
+        "ordinal": 12,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 9
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "0de1a01f0605a99a935df23537812b956e1b5f6684102e6d54ed312e03e4716a"
+}

@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "\n            UPDATE positions\n            SET shares = ?, avg_price = ?, updated_at = ?\n            WHERE id = ?\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": []
+  },
+  "hash": "a45918b8a8d115321b63e3a02266b597cbcbafbc1e185996db90abcff25c300a"
+}
