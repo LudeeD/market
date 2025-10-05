@@ -12,6 +12,7 @@ RUN apk add --no-cache \
 # Copy source code
 COPY Cargo.toml Cargo.lock ./
 COPY .sqlx ./.sqlx
+COPY migrations ./migrations
 COPY src ./src
 COPY templates ./templates
 COPY static ./static
