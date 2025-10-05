@@ -2,6 +2,8 @@
 
 simple & extensible prediction markets built with rust
 
+<img width="907" height="938" alt="Screenshot from 2025-10-05 14-19-54" src="https://github.com/user-attachments/assets/94d51cf6-eed3-4ef5-9509-bd1070b88d94" />
+
 ## features
 
 - **lmsr pricing** - polymarket-style logarithmic market scoring rule with unlimited liquidity
