@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "\n            UPDATE markets\n            SET closed_at = ?\n            WHERE id = ? AND closed_at IS NULL AND resolved = 0\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "28e32d08f97f7254fb8d664bbd90831ddb7772ea99dd091b36eb141b127d1fde"
+}

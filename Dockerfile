@@ -1,42 +1,34 @@
 # Build stage
-FROM rust:1.83-slim AS builder
+FROM rust:alpine AS builder
 
 WORKDIR /app
 
 # Install build dependencies
-RUN apt-get update && apt-get install -y \
-    pkg-config \
-    libssl-dev \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache \
+    musl-dev \
+    openssl-dev \
+    pkgconfig
 
-# Copy manifests
+# Copy source code
 COPY Cargo.toml Cargo.lock ./
-
-# Create dummy source to build dependencies
-RUN mkdir src && \
-    echo "fn main() {}" > src/main.rs && \
-    cargo build --release && \
-    rm -rf src
-
-# Copy actual source code
+COPY .sqlx ./.sqlx
 COPY src ./src
 COPY templates ./templates
 COPY static ./static
 
-# Build the application
-RUN touch src/main.rs && \
-    cargo build --release
+# Build the application with offline mode for sqlx
+ENV SQLX_OFFLINE=true
+RUN cargo build --release
 
 # Runtime stage
-FROM debian:bookworm-slim
+FROM alpine:latest
 
 WORKDIR /app
 
 # Install runtime dependencies
-RUN apt-get update && apt-get install -y \
+RUN apk add --no-cache \
     ca-certificates \
-    libssl3 \
-    && rm -rf /var/lib/apt/lists/*
+    libgcc
 
 # Copy binary from builder
 COPY --from=builder /app/target/release/market /app/market

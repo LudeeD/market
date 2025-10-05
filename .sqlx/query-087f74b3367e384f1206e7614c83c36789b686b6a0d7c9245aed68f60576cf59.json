@@ -1,6 +1,6 @@
 {
   "db_name": "SQLite",
-  "query": "\n            SELECT id, question, description, creator_id, end_date, resolved, outcome, yes_pool, no_pool, q_yes, q_no, liquidity_param, created_at\n            FROM markets\n            ORDER BY created_at DESC\n            ",
+  "query": "\n            INSERT INTO markets (question, description, creator_id, oracle_id, end_date, yes_pool, no_pool, q_yes, q_no, liquidity_param)\n            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)\n            RETURNING id, question, description, creator_id, oracle_id, end_date, closed_at, resolved, outcome, yes_pool, no_pool, q_yes, q_no, liquidity_param, created_at\n            ",
   "describe": {
     "columns": [
       {
@@ -24,60 +24,72 @@
         "type_info": "Int64"
       },
       {
-        "name": "end_date",
+        "name": "oracle_id",
         "ordinal": 4,
+        "type_info": "Int64"
+      },
+      {
+        "name": "end_date",
+        "ordinal": 5,
+        "type_info": "Text"
+      },
+      {
+        "name": "closed_at",
+        "ordinal": 6,
         "type_info": "Text"
       },
       {
         "name": "resolved",
-        "ordinal": 5,
+        "ordinal": 7,
         "type_info": "Bool"
       },
       {
         "name": "outcome",
-        "ordinal": 6,
+        "ordinal": 8,
         "type_info": "Bool"
       },
       {
         "name": "yes_pool",
-        "ordinal": 7,
-        "type_info": "Float"
-      },
-      {
-        "name": "no_pool",
-        "ordinal": 8,
-        "type_info": "Float"
-      },
-      {
-        "name": "q_yes",
         "ordinal": 9,
         "type_info": "Float"
       },
       {
-        "name": "q_no",
+        "name": "no_pool",
         "ordinal": 10,
         "type_info": "Float"
       },
       {
-        "name": "liquidity_param",
+        "name": "q_yes",
         "ordinal": 11,
         "type_info": "Float"
       },
       {
-        "name": "created_at",
+        "name": "q_no",
         "ordinal": 12,
+        "type_info": "Float"
+      },
+      {
+        "name": "liquidity_param",
+        "ordinal": 13,
+        "type_info": "Float"
+      },
+      {
+        "name": "created_at",
+        "ordinal": 14,
         "type_info": "Text"
       }
     ],
     "parameters": {
-      "Right": 0
+      "Right": 10
     },
     "nullable": [
       false,
       false,
       true,
       false,
+      true,
       false,
+      true,
       false,
       true,
       false,
@@ -88,5 +100,5 @@
       false
     ]
   },
-  "hash": "4acd35075b8154b08b99c109c5eaad2016743f957acc673ad034d266e6fc3377"
+  "hash": "087f74b3367e384f1206e7614c83c36789b686b6a0d7c9245aed68f60576cf59"
 }
