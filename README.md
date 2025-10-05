@@ -22,16 +22,32 @@ simple & extensible prediction markets built with rust
 
 ## quick start
 
+### using docker (recommended)
+
+```bash
+# pull and run the latest image
+docker run -d \
+  -p 3000:3000 \
+  -v market-data:/app/data \
+  ghcr.io/ludeed/market:latest
+
+# open browser
+open http://localhost:3000
+```
+
+### building from source
+
 ```bash
 # clone the repo
 git clone https://github.com/ludeed/market.git
 cd market
 
-# run the server
-cargo run
+# build and run with docker
+docker build -t market .
+docker run -p 3000:3000 -v market-data:/app/data market
 
-# open browser
-open http://localhost:3000
+# or run directly with cargo
+cargo run
 ```
 
 ## how it works

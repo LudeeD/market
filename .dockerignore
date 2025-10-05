@@ -1,0 +1,33 @@
+# Git
+.git
+.gitignore
+.github
+
+# Rust build artifacts
+target/
+Cargo.lock
+
+# Database
+*.db
+*.db-shm
+*.db-wal
+data/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Documentation
+README.md
+ROADMAP.md
+LICENSE
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
