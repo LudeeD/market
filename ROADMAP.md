@@ -9,6 +9,14 @@
 - [x] Position tracking
 - [x] Basic authentication (username/password)
 
+### Session Management
+- [x] Cookie-based session handling with `tower_sessions`
+- [x] Track logged-in users across requests (`RequireAuth` & `OptionalAuth` extractors)
+- [x] Working logout functionality
+- [x] Session-based user tracking (no hardcoded user IDs)
+- [x] Logout button in UI templates
+- [x] User profile dropdown in navbar
+
 ### LMSR Implementation (Polymarket-style)
 - [x] Logarithmic Market Scoring Rule (LMSR) pricing algorithm
 - [x] Unlimited liquidity (shares minted/burned on demand)
@@ -24,48 +32,66 @@
 - [x] Position management
 - [x] Profit/loss calculations
 - [x] Market resolution
+- [x] Real-time price preview before trade
+- [x] Cost calculation API endpoint
+- [x] Potential profit/loss display
+- [x] Position tracking page with P&L
+
+### Market Features
+- [x] Oracle resolution system (designated resolver)
+- [x] Oracle assignment on market creation
+- [x] Market creator controls (can resolve if oracle not set)
+- [x] Payout processing for resolved markets
+
+### Analytics & Display
+- [x] Price charts with Chart.js
+- [x] Historical price data tracking
+- [x] Price snapshot recording on each trade
+- [x] API endpoint for price history
+- [x] Position value tracking
+
+### User Experience
+- [x] Multi-theme system (light, dark, hacker, sepia, pastel)
+- [x] Theme persistence with localStorage
+- [x] User profiles with balance display
+- [x] Current positions display on market detail page
+- [x] Responsive navbar with user dropdown
 
 ## 🚧 High Priority (Core Functionality)
-
-### Session Management
-- [ ] Implement proper session handling with cookies
-- [ ] Track logged-in users across requests
-- [ ] Working sign-out functionality
-- [ ] Replace hardcoded `user_id = 1` with actual session user
-- [ ] Session expiration and refresh
-- [ ] "Remember me" functionality
 
 ### Market Features
 - [ ] Market categories/tags
 - [ ] Market search and filtering
 - [ ] Market history and activity feed
-- [ ] Market creator controls
 - [ ] Market validation before resolution
 - [ ] Disputed resolution mechanism
+- [ ] Market end date validation (auto-close trading)
+- [ ] Market description rich text support
 
 ### Trading UX
-- [ ] Real-time price preview before trade
-- [ ] Slippage warnings
+- [ ] Slippage warnings (% price impact)
 - [ ] Order limits and validation
-- [ ] Trade history per user
-- [ ] Cancel pending orders (if order book added)
+- [ ] Trade history per user (activity log)
+- [ ] Session expiration and refresh
+- [ ] "Remember me" functionality
 
 ## 📊 Medium Priority (Enhancements)
 
 ### Analytics & Display
 - [ ] Market statistics (volume, unique traders, etc.)
-- [ ] Price charts and historical data
 - [ ] Leaderboard (most profitable traders)
-- [ ] Portfolio value tracking
+- [ ] Portfolio value tracking over time
 - [ ] Daily/weekly P&L summaries
+- [ ] Trading volume charts
+- [ ] Market activity timeline
 
 ### User Experience
-- [ ] User profiles
 - [ ] Avatar/display name support
 - [ ] Email notifications for market events
 - [ ] Market comments/discussion
 - [ ] Follow/favorite markets
-- [ ] Dark mode
+- [ ] Mobile responsive improvements
+- [ ] Accessibility enhancements
 
 ### Market Maker Improvements
 - [ ] Dynamic liquidity parameter adjustment
@@ -100,47 +126,45 @@
 
 ## 🐛 Known Issues
 
-### Authentication
-- **No session management**: Login/logout don't actually track sessions
-- **Hardcoded user ID**: All trades use `user_id = 1`
-- **No logout button in UI**: Need to add logout link to templates
-
 ### Database
-- **Legacy fields**: `yes_pool` and `no_pool` columns still exist (kept for backward compatibility)
-- **Timestamp format**: Already fixed to use RFC3339 format
+- **Legacy fields**: `yes_pool` and `no_pool` columns still exist (kept for backward compatibility, not used)
+- **No database migrations**: Schema changes require manual intervention
 
 ### UI/Templates
-- **Minimal styling**: Basic HTML templates need CSS improvements
-- **No error handling in templates**: Failed states not well displayed
-- **Mobile responsiveness**: Not optimized for mobile devices
+- **Error handling**: Failed states could be better displayed with proper error pages
+- **Mobile responsiveness**: Not fully optimized for mobile devices
+- **Form validation**: Client-side validation is minimal
 
 ## 🎯 Next Sprint Focus
 
-1. **Session Management** (Critical)
-   - Implement cookie-based sessions
-   - Add logout button to all pages
-   - Show current user in navbar
-   - Secure session storage
+1. **Market Discovery & Organization** (High Priority)
+   - Add market categories/tags
+   - Implement search functionality
+   - Add filtering (active/resolved/by category)
+   - Show market statistics (volume, traders)
 
-2. **Trading Improvements**
-   - Show price impact before trade confirmation
-   - Add trade confirmation modal
-   - Display current market probability prominently
+2. **Trading Experience Enhancements**
+   - Add slippage/price impact warnings
+   - Trade history per user
+   - Order validation improvements
+   - Session timeout handling
 
-3. **UI Polish**
-   - Add basic CSS styling
-   - Improve error messages
-   - Add loading states
-   - Mobile responsive design
+3. **UI/UX Polish**
+   - Better error pages and messages
+   - Form validation improvements
+   - Loading states for async operations
+   - Mobile responsive refinements
 
 ## 📝 Technical Debt
 
-- Remove or migrate away from legacy `yes_pool`/`no_pool` fields
-- Add proper error handling middleware
-- Implement request validation layer
+- Remove or migrate away from legacy `yes_pool`/`no_pool` database columns
+- Add proper error handling middleware (currently using basic Result/String errors)
+- Implement comprehensive request validation layer
 - Add integration tests for trading flows
-- Document API endpoints
+- Add end-to-end tests for critical paths
+- Document API endpoints (OpenAPI/Swagger)
 - Add deployment documentation
+- Database migration system (currently manual SQL changes)
 
 ## 🔮 Future Exploration
 

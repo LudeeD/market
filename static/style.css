@@ -102,10 +102,21 @@ nav a:hover {
     text-decoration: underline;
 }
 
+nav .separator {
+    color: var(--muted);
+    margin: 0 5px;
+}
+
+/* Auth Links */
+.auth-links {
+    margin-left: auto;
+}
+
 /* Profile Dropdown */
 .profile-dropdown {
     position: relative;
     display: inline-block;
+    margin-left: auto;
 }
 
 .profile-button {
@@ -116,6 +127,7 @@ nav a:hover {
     font-size: 1em;
     cursor: pointer;
     padding: 0 5px;
+    margin: 0;
 }
 
 .profile-button:hover {
@@ -657,6 +669,105 @@ button:hover {
     line-height: 2;
 }
 
+/* Hero Section */
+.hero {
+    text-align: center;
+    padding: 40px 0;
+}
+
+.hero h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+.ascii-art {
+    color: var(--accent);
+    font-size: 0.7em;
+    line-height: 1.2;
+    margin: 20px auto;
+    display: inline-block;
+}
+
+.tagline {
+    font-size: 1.1em;
+    color: var(--muted);
+    margin: 30px 0;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin: 40px 0;
+    text-align: left;
+}
+
+@media (max-width: 768px) {
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.feature-box {
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background-color: var(--card-bg);
+}
+
+.feature-box h3 {
+    margin: 0 0 10px 0;
+    font-size: 1em;
+    color: var(--accent);
+}
+
+.feature-box p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.9em;
+    line-height: 1.5;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.cta-primary, .cta-secondary {
+    padding: 15px 30px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.cta-primary {
+    background-color: var(--accent);
+    color: var(--bg);
+    border: 2px solid var(--accent);
+}
+
+.cta-primary:hover {
+    background-color: transparent;
+    color: var(--accent);
+}
+
+.cta-secondary {
+    background-color: transparent;
+    color: var(--accent);
+    border: 2px solid var(--accent);
+}
+
+.cta-secondary:hover {
+    background-color: var(--accent);
+    color: var(--bg);
+}
+
 /* Price Chart */
 .price-chart-container {
     margin: 30px 0;
@@ -717,6 +828,24 @@ footer {
     text-align: center;
     color: var(--muted);
     font-size: 0.9em;
+}
+
+.footer-tagline {
+    margin: 0 0 8px 0;
+}
+
+.footer-credits {
+    margin: 0 0 15px 0;
+    font-size: 0.85em;
+}
+
+.footer-credits a {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.footer-credits a:hover {
+    text-decoration: underline;
 }
 
 .footer-theme-selector {

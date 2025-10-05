@@ -10,10 +10,10 @@
 <body>
     <header>
         <nav>
-            <a href="/">home</a> |
+            <a href="/">home</a>
+            <span class="separator">|</span>
             <a href="/markets">markets</a>
             {% if username.is_some() %}
-            |
             <div class="profile-dropdown">
                 <button class="profile-button" id="profile-toggle">
                     {{ username.as_ref().unwrap() }} ▾
@@ -26,8 +26,11 @@
                 </div>
             </div>
             {% else %}
-            | <a href="/signup">signup</a> |
-            <a href="/login">login</a>
+            <div class="auth-links">
+                <a href="/signup">signup</a>
+                <span class="separator">|</span>
+                <a href="/login">login</a>
+            </div>
             {% endif %}
         </nav>
     </header>
@@ -37,7 +40,8 @@
     </main>
 
     <footer>
-        <p>prediction market | simple & extensible</p>
+        <p class="footer-tagline">market | simple & extensible prediction markets</p>
+        <p class="footer-credits">built by <a href="https://github.com/ludeed" target="_blank" rel="noopener">ludeed</a> & <a href="https://claude.ai" target="_blank" rel="noopener">claudius</a></p>
         <div class="footer-theme-selector">
             <label for="theme-switcher">theme:</label>
             <select id="theme-switcher">
